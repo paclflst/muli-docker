@@ -20,3 +20,4 @@ after_success:
     - docker push paclflst/multi-nginx
     - docker push paclflst/multi-server
     - docker push paclflst/multi-worker
+    
