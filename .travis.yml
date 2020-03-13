@@ -1,0 +1,22 @@
+sudo: required
+services:
+    - deocker
+
+before_install:
+    - docker build -t paclflst/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+    - docker run CI=true paclflst/react-test npm test
+
+after_success:
+    - docker build -t paclflst/multi-client ./client
+    - docker build -t paclflst/multi-nginx ./nginx
+    - docker build -t paclflst/multi-server ./server
+    - docker build -t paclflst/multi-worker ./worker
+# Log in to Docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+# Push images to Docker hub
+    - docker push paclflst/multi-client
+    - docker push paclflst/multi-nginx
+    - docker push paclflst/multi-server
+    - docker push paclflst/multi-worker
